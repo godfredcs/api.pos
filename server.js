@@ -8,14 +8,6 @@ const app = express();
 
 const modules = require('./src/modules');
 
-/* const usersRoutes = require('../api/routes/users');
-const itemsRoutes = require('../api/routes/items');
-const salesRoutes = require('../api/routes/sales');
-const mobileMoneyRoutes = require('../api/routes/mobile_money');
-const footballRoutes = require('../api/routes/football');
-const jackpotRoutes = require('../api/routes/jackpot');
-const creditTransfersRoutes = require('../api/routes/credit_transfers'); */
-
 // Import middleware checkAuth.
 const checkAuth = require('./src/middlewares/checkAuth');
 
