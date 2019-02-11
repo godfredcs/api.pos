@@ -6,10 +6,15 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
+/**
+ * Import modules.
+ */
 const modules = require('./src/modules');
 
-// Import middleware checkAuth.
-const checkAuth = require('./src/middlewares/checkAuth');
+/**
+ * Import the checkAuth middleware.
+ */
+const { checkAuth } = require('./src/middlewares');
 
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'src', 'public')));
@@ -28,7 +33,9 @@ app.use((req, res, next) => {
     next();
 });
 
-// Routes.
+/**
+ * Assign routes to modules.
+ */
 app.use('/users', modules.UserRoute);
 app.use('/items', checkAuth, modules.ItemRoute);
 app.use('/sales', checkAuth, modules.SaleRoute);
@@ -37,7 +44,9 @@ app.use('/football', checkAuth, modules.FootballRoute);
 app.use('/jackpot', checkAuth, modules.JackpotRoute);
 app.use('/credit_transfers', checkAuth, modules.CreditRoute);
 
-// If the route has not been matched up to this point give 404 error.
+/**
+ * If the route has not been matched up to this point then give 404 error.
+ */
 app.use((req, res, next) => {
     const error = new Error('Not Found');
     error.status = 404;

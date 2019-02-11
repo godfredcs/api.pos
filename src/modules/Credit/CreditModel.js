@@ -1,19 +1,14 @@
-const mongoose = require('mongoose');
-
-const CreditSchema = new mongoose.Schema({
-    number: {
-        type: Number,
-        required: true,
-        trim: true
-    },
-
-    amount: {
-        type: mongoose.Schema.Types.Decimal128,
-        required: true,
-        trim: true
-    }
-}, {
-    timestamps: true
-});
-
-module.exports = mongoose.model('Credit', CreditSchema);
+module.exports = function (sequelize, type) {
+    return sequelize.define('credit', {
+        number: {
+            type: type.STRING,
+            allowNull: false
+        },
+        amount: {
+            type: type.DECIMAL(10, 2),
+            allowNull: false
+        }
+    }, {
+        timestamps: true
+    });
+}

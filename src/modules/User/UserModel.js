@@ -1,54 +1,26 @@
-// Load required modules
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-
-// bcrypt salting rounds
-const saltRounds = 10;
-
-const UserSchema = new mongoose.Schema({
-    firstname: {
-        type: String,
-        required: true,
-        trim: true,
-        lowercase: true
-    },
-
-    lastname: {
-        type: String,
-        required: true,
-        trim: true,
-        lowercase: true
-    },
-
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-        lowercase: true
-    },
-
-    password: {
-        type: String,
-        required: true,
-        minlength: 6
-    }
-}, {
-    timestamps: true
-});
-
-// Hash password before saving to database
-UserSchema.pre('save', function (next) {
-    var user = this;
-
-    bcrypt.hash(user.password, saltRounds, function (err, hash) {
-        if (err) {
-            return next(err);
+module.exports = function (sequelize, type) {
+    return sequelize.define('user', {
+        id: {
+            type: type.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        firstname: {
+            type: type.STRING
+        },
+        lastname: {
+            type: type.STRING,
+            allowNull: false
+        },
+        email: {
+            type: type.STRING,
+            allowNull: false
+        },
+        password: {
+            type: type.STRING,
+            allowNull: false
         }
-
-        user.password = hash;
-        next();
+    }, {
+        timestamps: true
     });
-});
-
-module.exports = mongoose.model('User', UserSchema);
+}

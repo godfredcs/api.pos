@@ -7,13 +7,15 @@ const sequelize = new Sequelize(DB_DATABASE, DB_USERNAME, DB_PASSWORD, {
     host: DB_HOST,
     dialect: DB_CONNECTION,
     operatorsAliases: false,
-
+    define: {
+        timestamps: true
+    },
     pool: {
         max: 5,
         min: 0,
         acquire: 30000,
         idle: 10000
-    },
+    }
 });
 
 sequelize
@@ -21,8 +23,8 @@ sequelize
     .then(() => {
         console.log('Connection has been established successfully.');
     })
-    .catch(err => {
-        console.error('Unable to connect to the database: ', err);
+    .catch(error => {
+        console.error('Unable to connect to the database: ', error);
     });
 
 module.exports = sequelize;
