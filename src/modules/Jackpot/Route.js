@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const multer = require('multer');
-const JackpotController = require('./JackpotController');
+const JackpotController = require('./Controller');
 
 router.get('/', JackpotController.getAll);
 router.get('/filter', JackpotController.getByDate);

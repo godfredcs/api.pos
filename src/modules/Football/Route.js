@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const multer = require('multer');
-const FootballController = require('./FootballController');
+const FootballController = require('./Controller');
 
 router.get('/', FootballController.getAll);
 router.get('/filter', FootballController.getByDate);

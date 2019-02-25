@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const multer = require('multer');
-const SaleController = require('./SaleController');
+const SaleController = require('./Controller');
 
 router.get('/', SaleController.getAll);
 router.get('/filter', SaleController.getByDate);

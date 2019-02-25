@@ -5,7 +5,7 @@ const upload = require('../../services/upload');
 const checkAuth = require('../../middlewares/checkAuth');
 
 // Import usersController.
-const usersController = require('./UserController');
+const usersController = require('./Controller');
 
 // Routes.
 router.get('/', checkAuth, usersController.getUsers);

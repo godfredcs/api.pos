@@ -1,5 +1,11 @@
 module.exports = function (sequelize, type) {
     return sequelize.define('football', {
+        id: {
+            primaryKey: true,
+            type: type.INTEGER,
+            autoIncrement: true
+        },
+
         name: {
             type: type.STRING,
             allowNull: false

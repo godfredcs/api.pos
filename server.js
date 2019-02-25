@@ -6,14 +6,22 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-/**
- * Import modules.
- */
-const modules = require('./src/modules');
+require('./db_connection');
 
-/**
- * Import the checkAuth middleware.
- */
+/** Import modules */
+const modules = require('./src/modules');
+const {
+    UserRoute,
+    ItemRoute,
+    SaleRoute,
+    JackpotRoute,
+    FootballRoute,
+    MobileMoneyRoute,
+    CreditCardRoute,
+    CreditTransferRoute
+} = modules.routes;
+
+/** Import checkAuth middleware */
 const { checkAuth } = require('./src/middlewares');
 
 app.use(morgan('dev'));
@@ -33,20 +41,17 @@ app.use((req, res, next) => {
     next();
 });
 
-/**
- * Assign routes to modules.
- */
-app.use('/users', modules.UserRoute);
-app.use('/items', checkAuth, modules.ItemRoute);
-app.use('/sales', checkAuth, modules.SaleRoute);
-app.use('/mobile_money', checkAuth, modules.MobileMoneyRoute);
-app.use('/football', checkAuth, modules.FootballRoute);
-app.use('/jackpot', checkAuth, modules.JackpotRoute);
-app.use('/credit_transfers', checkAuth, modules.CreditRoute);
+/** Assign routes to modules */
+app.use('/users', UserRoute);
+app.use('/items', checkAuth, ItemRoute);
+app.use('/sales', checkAuth, SaleRoute);
+app.use('/jackpot', checkAuth, JackpotRoute);
+app.use('/football', checkAuth, FootballRoute);
+app.use('/mobile_money', checkAuth, MobileMoneyRoute);
+app.use('/credit_cards', checkAuth, CreditCardRoute);
+app.use('/credit_transfers', checkAuth, CreditTransferRoute);
 
-/**
- * If the route has not been matched up to this point then give 404 error.
- */
+/** If the route has not been matched up to this point then give 404 error */
 app.use((req, res, next) => {
     const error = new Error('Not Found');
     error.status = 404;
@@ -64,4 +69,4 @@ app.use((error, req, res, next) => {
 
 const server = http.Server(app);
 
-server.listen(8000, () => console.log('this is the way of the server'))
+server.listen(5000, () => console.log('this is the way of the server'))

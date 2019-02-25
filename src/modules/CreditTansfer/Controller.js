@@ -1,19 +1,21 @@
-const Jackpot = require('./JackpotModel');
+const CreditTransfer = require('./Model');
 
+// Function for getting all credit transfers in the system.
 exports.getAll = (req, res, next) => {
-    Jackpot.findAll()
-        .then(jackpot => {
-            res.status(200).json(jackpot);
+    CreditTransfer.findAll()
+        .then(creditTransfer => {
+            res.status(200).json(creditTransfer);
         })
         .catch(error => {
             res.status(500).json(error);
         });
 };
 
+// Function for getting credit transfers by date.
 exports.getByDate = (req, res, next) => {
     const { from, to } = req.query;
 
-    Jackpot.findAll({
+    CreditTransfer.findAll({
         where: {
             created_at: {
                 [Op.gte]: from,
@@ -21,8 +23,8 @@ exports.getByDate = (req, res, next) => {
             }
         }
     })
-        .then(jackpots => {
-            if (!jackpots) {
+        .then(credit_transfers => {
+            if (!credit_transfers) {
                 return res.status(404).json({
                     error: {
                         message: "Jackpot not found"
@@ -30,20 +32,21 @@ exports.getByDate = (req, res, next) => {
                 });
             }
 
-            res.status(200).json(jackpots);
+            res.status(200).json(credit_transfers);
         })
         .catch(error => {
             res.status(500).json(error);
         });
 };
 
+// Function for creating a new credit transfer in the system.
 exports.create = (req, res, next) => {
-    if (req.body.amount) {
-        Jackpot.create(req.body)
-            .then(jackpot => {
-                Jackpot.findById(jackpot.id)
-                    .then(foundJackpot => {
-                        res.status(201).json(foundJackpot);
+    if (req.body.number && req.body.amount) {
+        CreditTransfer.create(req.body)
+            .then(creditTransfer => {
+                CreditTransfer.findById(creditTransfer.id)
+                    .then(foundCreditTransfer => {
+                        res.status(201).json(foundCreditTransfer);
                     })
             })
             .catch(error => {
@@ -59,17 +62,17 @@ exports.create = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-    Jackpot.findById(req.params.id)
-        .then(jackpot => {
-            if (!jackpot) {
+    CreditTransfer.findById(req.params.id)
+        .then(creditTransfer => {
+            if (!creditTransfer) {
                 return res.status(404).json({
                     error: {
-                        message: "Jackpot entry not found"
+                        message: "Credit transfer entry not found"
                     }
                 });
             }
 
-            res.status(200).json(jackpot);
+            res.status(200).json(creditTransfer);
         })
         .catch(error => {
             res.status(500).json(error);
@@ -77,19 +80,19 @@ exports.get = (req, res, next) => {
 };
 
 exports.update = (req, res, next) => {
-    Jackpot.findById(req.params.id)
-        .then(jackpot => {
-            if (!jackpot) {
+    CreditTransfer.findById(req.params.id)
+        .then(creditTransfer => {
+            if (!creditTransfer) {
                 return res.status(404).json({
                     error: {
-                        message: "Jackpot entry not found"
+                        message: "Credit transfer entry not found"
                     }
                 });
             }
 
-            jackpot.updateAttributes(req.body)
-                .then(updatedJackpot => {
-                    res.status(200).json(updatedJackpot);
+            creditTransfer.updateAttributes(req.body)
+                .then(updatedCreditTransfer => {
+                    res.status(200).json(updatedCreditTransfer);
                 })
         })
         .catch(error => {
@@ -98,19 +101,19 @@ exports.update = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-    Jackpot.destroy({ where: { id: req.params.id } })
-        .then(jackpot => {
-            if (!jackpot) {
+    CreditTransfer.destroy({ where: { id: req.params.id } })
+        .then(creditTransfer => {
+            if (!creditTransfer) {
                 return res.status(404).json({
                     error: {
-                        message: "Jackpot entry not found"
+                        message: "Credit transfer entry not found"
                     }
                 });
             }
 
             res.status(200).json({
                 success: {
-                    message: "Jackpot entry successfully deleted"
+                    message: "Credit transfer entry successfully deleted"
                 }
             });
         })

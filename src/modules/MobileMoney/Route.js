@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const multer = require('multer');
-const MobileMoneyController = require('./MobileMoneyController');
+const MobileMoneyController = require('./Controller');
 
 router.get('/', MobileMoneyController.getAll);
 router.get('/filter', MobileMoneyController.getByDate);

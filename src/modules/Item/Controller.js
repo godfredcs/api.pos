@@ -1,5 +1,5 @@
-const Item = require('./ItemModel');
-const Sale = require('../Sale/SaleModel');
+const Item = require('./Model');
+const Sale = require('../Sale/Model');
 
 exports.getAll = (req, res, next) => {
     Item.findAll({ include: [ Sale ] })

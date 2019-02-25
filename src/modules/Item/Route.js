@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const upload = require('../../services/upload');
-const ItemController = require('./ItemController');
+const ItemController = require('./Controller');
 
 router.get('/', ItemController.getAll);
 router.post('/', upload.single('image'), ItemController.create);

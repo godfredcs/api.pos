@@ -1,19 +1,22 @@
-const MobileMoney = require('./MobileMoneyModel');
+const modules = require('../index');
+const { CreditCard } = modules.models;
 
+/** Function for getting all credit transfers in the system */
 exports.getAll = (req, res, next) => {
-    MobileMoney.findAll()
-        .then(mobileMoney => {
-            res.status(200).json(mobileMoney);
+    CreditCard.findAll()
+        .then(cards => {
+            res.status(200).json(cards);
         })
         .catch(error => {
             res.status(500).json(error);
         });
 };
 
+/** Funciton for getting credit transgers by date */
 exports.getByDate = (req, res, next) => {
     const { from, to } = req.query;
 
-    MobileMoney.findAll({
+    CreditCard.findAll({
         where: {
             created_at: {
                 [Op.gte]: from,
@@ -21,31 +24,30 @@ exports.getByDate = (req, res, next) => {
             }
         }
     })
-        .then(mobileMoneys => {
-            if (!mobileMoneys) {
+        .then(cards => {
+            if (!cards) {
                 return res.status(404).json({
                     error: {
-                        message: "Mobile Money not found"
+                        message: "Jackpot not found"
                     }
                 });
             }
 
-            res.status(200).json(mobileMoneys);
+            res.status(200).json(cards);
         })
         .catch(error => {
             res.status(500).json(error);
         });
-}
+};
 
+/** Function for creating a new credit transfer in the system */
 exports.create = (req, res, next) => {
-    const { name, type, phone, commission, amount } = req.body;
-
-    if (name && type && phone && commission && amount) {
-        MobileMoney.create(req.body)
-            .then(mobileMoney => {
-                MobileMoney.findById(mobileMoney.id)
-                    .then(foundMobileMoney => {
-                        res.status(201).json(foundMobileMoney);
+    if (req.body.number && req.body.amount) {
+        CreditCard.create(req.body)
+            .then(card => {
+                CreditCard.findById(card.id)
+                    .then(foundCard => {
+                        res.status(201).json(foundCard);
                     })
             })
             .catch(error => {
@@ -61,17 +63,17 @@ exports.create = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-    MobileMoney.findById(req.params.id)
-        .then(mobileMoney => {
-            if (!mobileMoney) {
+    CreditCard.findById(req.params.id)
+        .then(card => {
+            if (!card) {
                 return res.status(404).json({
                     error: {
-                        message: "Mobile money transaction not found"
+                        message: "Credit transfer entry not found"
                     }
                 });
             }
 
-            res.status(200).json(mobileMoney);
+            res.status(200).json(card);
         })
         .catch(error => {
             res.status(500).json(error);
@@ -79,22 +81,19 @@ exports.get = (req, res, next) => {
 };
 
 exports.update = (req, res, next) => {
-    MobileMoney.findById(req.params.id)
-        .then(mobileMoney => {
-            if (!mobileMoney) {
+    CreditCard.findById(req.params.id)
+        .then(card => {
+            if (!card) {
                 return res.status(404).json({
                     error: {
-                        message: "Mobile money transaction does not exist"
+                        message: "Credit transfer entry not found"
                     }
                 });
             }
 
-            mobileMoney.updateAttributes(req.body)
-                .then(updatedMobileMoney => {
-                    MobileMoney.findById(updatedMobileMoney.id)
-                        .then(foundMobileMoney => {
-                            res.status(201).json(updatedMobileMoney);
-                        })
+            card.updateAttributes(req.body)
+                .then(updatedCard => {
+                    res.status(200).json(updatedCard);
                 })
         })
         .catch(error => {
@@ -103,26 +102,23 @@ exports.update = (req, res, next) => {
 };
 
 exports.delete = (req, res, next) => {
-   MobileMoney.destroy({ where: { id: req.params.id } })
-        .then(mobileMoney => {
-            if (!mobileMoney) {
+    CreditCard.destroy({ where: { id: req.params.id } })
+        .then(card => {
+            if (!card) {
                 return res.status(404).json({
                     error: {
-                        message: "Mobile money transaction does not exist"
+                        message: "Credit transfer entry not found"
                     }
                 });
             }
 
             res.status(200).json({
                 success: {
-                    message: "Mobile money transaction has been successfully deleted"
+                    message: "Credit transfer entry successfully deleted"
                 }
-            })
+            });
         })
         .catch(error => {
             res.status(500).json(error);
         });
 };
-
-
-

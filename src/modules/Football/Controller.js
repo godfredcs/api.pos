@@ -1,4 +1,4 @@
-const Football = require('./FootballModel');
+const Football = require('./Model');
 
 exports.getAll = (req, res, next) => {
     Football.findAll()

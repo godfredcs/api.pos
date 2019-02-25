@@ -2,6 +2,9 @@
   "name": "api.pos",
   "version": "1.0.0",
   "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
   "repository": "https://github.com/godfredcs/api.pos.git",
   "author": "<addaiz.godfred@gmail.com>",
   "license": "MIT",
