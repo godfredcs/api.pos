@@ -1,4 +1,5 @@
-const MobileMoney = require('./Model');
+const modules = require('../index');
+const MobileMoney = modules.MobileMoney;
 
 exports.getAll = (req, res, next) => {
     MobileMoney.findAll()

@@ -1,4 +1,5 @@
-const CreditTransfer = require('./Model');
+const modules = require('../index');
+const CreditTransfer = modules.CreditTransfer;
 
 // Function for getting all credit transfers in the system.
 exports.getAll = (req, res, next) => {

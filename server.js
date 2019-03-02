@@ -6,11 +6,12 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-require('./db_connection');
+require('./src/database');
 
 /** Import modules */
 const modules = require('./src/modules');
 const {
+    RoleRoute,
     UserRoute,
     ItemRoute,
     SaleRoute,
@@ -19,7 +20,7 @@ const {
     MobileMoneyRoute,
     CreditCardRoute,
     CreditTransferRoute
-} = modules.routes;
+} = modules;
 
 /** Import checkAuth middleware */
 const { checkAuth } = require('./src/middlewares');
@@ -42,6 +43,7 @@ app.use((req, res, next) => {
 });
 
 /** Assign routes to modules */
+app.use('/roles', RoleRoute);
 app.use('/users', UserRoute);
 app.use('/items', checkAuth, ItemRoute);
 app.use('/sales', checkAuth, SaleRoute);
@@ -69,4 +71,4 @@ app.use((error, req, res, next) => {
 
 const server = http.Server(app);
 
-server.listen(5000, () => console.log('this is the way of the server'))
+server.listen(5000, () => console.log('Server is running'));

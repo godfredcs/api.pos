@@ -1,4 +1,5 @@
-const Jackpot = require('./Model');
+const modules = require('../index');
+const Jackpot = modules.Jackpot;
 
 exports.getAll = (req, res, next) => {
     Jackpot.findAll()

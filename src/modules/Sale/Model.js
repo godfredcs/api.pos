@@ -1,5 +1,3 @@
-const Item = require('../Item/Model');
-
 module.exports = function (sequelize, type) {
     return sequelize.define('sale', {
         id: {
@@ -22,17 +20,12 @@ module.exports = function (sequelize, type) {
         amount: {
             type: type.DECIMAL(10, 2),
             allowNull: false
-        },
-
-        item_id: {
-            type: type.INTEGER,
-            allowNull: false,
-            references: {
-                model: Item,
-                key: 'id'
-            }
         }
     }, {
         timestamps: true
     });
 }
+
+/**
+ * item_id foreign key will be appended to table to enable relationship between item and sale.
+ */

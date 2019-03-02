@@ -1,5 +1,5 @@
 const modules = require('../index');
-const { CreditCard } = modules.models;
+const CreditCard = modules.CreditCard;
 
 /** Function for getting all credit transfers in the system */
 exports.getAll = (req, res, next) => {

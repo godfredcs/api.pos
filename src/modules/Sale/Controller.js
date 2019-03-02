@@ -1,4 +1,5 @@
-const Sale = require('./Model');
+const modules = require('../index');
+const Sale = modules.Sale;
 
 exports.getByDate = (req, res, next) => {
     const { from, to } = req.query;

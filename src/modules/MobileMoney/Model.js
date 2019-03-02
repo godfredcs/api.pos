@@ -1,5 +1,5 @@
 module.exports = function (sequelize, type) {
-    return sequelize.define('sale', {
+    return sequelize.define('mobile_money', {
         id: {
             primaryKey: true,
             allowNull: false,
@@ -8,7 +8,7 @@ module.exports = function (sequelize, type) {
         },
 
         name: {
-            type: type.INTEGER,
+            type: type.STRING,
             allowNull: false
         },
 

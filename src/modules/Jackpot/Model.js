@@ -1,5 +1,5 @@
 module.exports = function (sequelize, type) {
-    return sequelize.define('sale', {
+    return sequelize.define('jackpot', {
         id: {
             primaryKey: true,
             allowNull: false,
