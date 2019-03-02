@@ -1,1 +1,5 @@
-// charity
+*********** NOTES **************
+
+1.  Need to come up with a way of tracking the quantity of items in the system.
+    Need to add quantity field.
+    Added quantity field to items.

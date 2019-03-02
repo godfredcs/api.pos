@@ -13,8 +13,7 @@ module.exports = function (sequelize, type) {
         },
 
         type: {
-            type: type.INTEGER,
-            enum: ['cash-in', 'cash-out'],
+            type: type.ENUM('cash-in', 'cash-out'),
             allowNull: false
         },
 

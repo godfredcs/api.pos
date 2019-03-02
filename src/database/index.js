@@ -36,7 +36,20 @@ sequelize.authenticate()
     .catch(error => console.error('Unable to connect to the database: ', error));
 
 sequelize.sync({ force: true })
-    .then(() => console.log('tables have been created successfully'))
+    .then(function () {
+        Role.bulkCreate([
+            { name: 'admin' },
+            { name: 'user' }
+        ])
+            .then(function () {
+                User.create({
+                    firstname: 'Godfred',
+                    lastname: 'Boateng',
+                    email: 'godfred@gmail.com',
+                    password: 'godfred'
+                })
+            });
+    })
     .catch(error => console.error('Could not create tables: ', error));
 
 /** Export the models */

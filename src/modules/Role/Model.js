@@ -7,7 +7,7 @@ module.exports = function (sequelize, type) {
         },
 
         name: {
-            type: type.STRING,
+            type: type.ENUM('admin', 'user'),
             allowNull: false
         }
     }, {

@@ -7,18 +7,17 @@ module.exports = function (sequelize, type) {
         },
 
         type: {
-            type: type.STRING,
-            allowNull: false,
-            enum: ['mtn', 'vodafone', 'airteltigo']
+            type: type.ENUM('mtn', 'vodafone', 'airteltigo'),
+            allowNull: false
         },
 
         price: {
-            type: type.STRING,
+            type: type.DECIMAL(10, 2),
             allowNull: false
         },
 
         quantity: {
-            type: type.DECIMAL(10, 2),
+            type: type.INTEGER,
             allowNull: false
         },
 

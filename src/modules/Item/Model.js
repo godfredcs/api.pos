@@ -2,12 +2,14 @@ module.exports = function (sequelize, type) {
     return sequelize.define('item', {
         id: {
             primaryKey: true,
+            allowNull: false,
             type: type.INTEGER,
             autoIncrement: true
         },
 
         name: {
-            type: type.STRING
+            type: type.STRING,
+            allowNull: false
         },
 
         whole_price: {
@@ -17,6 +19,11 @@ module.exports = function (sequelize, type) {
 
         unit_price: {
             type: type.STRING,
+            allowNull: false
+        },
+
+        quantity: {
+            type: type.INTEGER,
             allowNull: false
         },
 

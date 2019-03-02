@@ -2,6 +2,7 @@ module.exports = function (sequelize, type) {
     return sequelize.define('football', {
         id: {
             primaryKey: true,
+            allowNull: false,
             type: type.INTEGER,
             autoIncrement: true
         },
