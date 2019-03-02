@@ -1,6 +1,17 @@
 require('dotenv-safe').config();
 const Sequelize = require('sequelize');
-const { DB_HOST, DB_CONNECTION, DB_USERNAME, DB_PASSWORD, DB_DATABASE } = process.env;
+const bcrypt = require('bcrypt');
+const {
+    DB_HOST,
+    DB_USERNAME,
+    DB_PASSWORD,
+    DB_DATABASE,
+    ADMIN_EMAIL,
+    DB_CONNECTION,
+    ADMIN_LASTNAME,
+    ADMIN_PASSWORD,
+    ADMIN_FIRSTNAME
+} = process.env;
 
 const sequelize = new Sequelize(DB_DATABASE, DB_USERNAME, DB_PASSWORD, {
     host: DB_HOST,
@@ -29,6 +40,7 @@ const CreditCard = require('../modules/CreditCard/Model')(sequelize, Sequelize);
 const MobileMoney = require('../modules/MobileMoney/Model')(sequelize, Sequelize);
 const CreditTransfer = require('../modules/CreditTansfer/Model')(sequelize, Sequelize);
 
+User.belongsTo(Role);
 Sale.belongsTo(Item);
 
 sequelize.authenticate()
@@ -42,12 +54,31 @@ sequelize.sync({ force: true })
             { name: 'user' }
         ])
             .then(function () {
-                User.create({
-                    firstname: 'Godfred',
-                    lastname: 'Boateng',
-                    email: 'godfred@gmail.com',
-                    password: 'godfred'
-                })
+                Role.findOne({ name: 'admin '})
+                    .then(function (role) {
+                        const role_id = role.get('id');
+
+                        let password = ADMIN_PASSWORD;
+                        const salt_rounds = 10;
+
+                        bcrypt.hash(password, salt_rounds, function (err, hash) {
+                            if (err) {
+                                return console.log('could not hash default password');
+                            }
+
+                            if (hash) {
+                                password = hash;
+
+                                User.create({
+                                    role_id,
+                                    firstname: ADMIN_FIRSTNAME,
+                                    lastname: ADMIN_LASTNAME,
+                                    email: ADMIN_EMAIL,
+                                    password
+                                });
+                            }
+                        })
+                    });
             });
     })
     .catch(error => console.error('Could not create tables: ', error));

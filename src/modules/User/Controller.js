@@ -1,10 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const modules = require('../index');
-/* const User = modules.User;
-const Role = modules.Role; */
-const User = require('./Model');
-const Role = require('../Role/Model');
+const { User, Role } = require('../../database');
 
 // Function for getting all users in the system.
 exports.getUsers = (req, res, next) => {
