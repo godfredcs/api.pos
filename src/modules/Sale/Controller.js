@@ -1,10 +1,9 @@
-const modules = require('../index');
-const Sale = modules.Sale;
+const { Sale, Item, Op } = require('../../database');
 
-exports.getByDate = (req, res, next) => {
+exports.getByDate = function (req, res) {
     const { from, to } = req.query;
 
-    /* Sale.findAll({
+    Sale.findAll({
         where: {
             created_at: {
                 [Op.gte]: from,
@@ -26,12 +25,12 @@ exports.getByDate = (req, res, next) => {
         })
         .catch(error => {
             res.status(500).json(error);
-        }); */
+        });
         return res.status(200).json({hello: 'hey yall'});
 };
 
-exports.getAll = (req,res, next) => {
-    /* Sale.findAll({ include: [ Item ]})
+exports.getAll = function (req,res) {
+    Sale.findAll({ include: [ Item ]})
         .then(sales => {
             if (!sales) {
                 return res.status(404).json({
@@ -45,12 +44,12 @@ exports.getAll = (req,res, next) => {
         })
         .catch(error => {
             res.status(500).json(error);
-        }); */
+        });
         return res.status(200).json({hello: 'hey yall'});
 };
 
-exports.create = (req, res, next) => {
-    /* if (req.body.item_id && (req.body.unit_quantity || req.body.whole_quantity)) {
+exports.create = function (req, res) {
+    if (req.body.item_id && (req.body.unit_quantity || req.body.whole_quantity)) {
         if (!Number(req.body.item_id) || (!Number(req.body.unit_quantity) && !Number(req.body.whole_quantity))) {
             return res.status(401).json({
                 error: {
@@ -84,31 +83,28 @@ exports.create = (req, res, next) => {
                 message: "Item id and quantity are required"
             }
         });
-    } */
+    }
     return res.status(200).json({hello: 'hey yall'});
 };
 
-exports.get = (req, res, next) => {
-    /* Sale.findById(req.params.id, { include: [ Item ]})
+exports.get = function (req, res) {
+    Sale.findById(req.params.id, { include: [ Item ]})
         .then(sale => {
             if (!sale) {
                 return res.status(404).json({
-                    error: {
-                        message: "Sale not found"
-                    }
+                    error: { message: "Sale not found" }
                 });
             }
 
             res.status(200).json(sale);
         })
-        .catch(error => {
-            res.status(500).json(error);
-        }); */
-        return res.status(200).json({hello: 'hey yall'});
+        .catch(error => res.status(500).json(error));
+
+    return res.status(200).json({hello: 'hey yall'});
 };
 
-exports.update = (req, res, next) => {
-    /* Sale.findById(req.params.id, { include: [ Item ] })
+exports.update = function (req, res) {
+    Sale.findById(req.params.id, { include: [ Item ] })
         .then(sale => {
             if (!sale) {
                 return res.status(404).json({
@@ -139,29 +135,25 @@ exports.update = (req, res, next) => {
         })
         .catch(error => {
             res.status(500).json(error);
-        }); */
-        return res.status(200).json({hello: 'hey yall'});
+        });
+
+    return res.status(200).json({hello: 'this is the update method for sales'});
 };
 
-exports.delete = (req, res, next) => {
-    /* Sale.destroy({ where: { id: req.params.id } })
+exports.delete = function (req, res) {
+    Sale.destroy({ where: { id: req.params.id } })
         .then(sale => {
             if (!sale) {
                 return res.status(404).json({
-                    error: {
-                        message: "Sale does not exist"
-                    }
+                    error: { message: "Sale does not exist" }
                 });
             }
 
             res.status(200).json({
-                success: {
-                    message: "Sale has been successfully deleted"
-                }
+                success: { message: "Sale has been successfully deleted" }
             })
         })
-        .catch(error => {
-            res.status(500).json(error);
-        }); */
-        return res.status(200).json({hello: 'hey yall'});
+        .catch(error => res.status(500).json(error));
+
+    return res.status(200).json({hello: 'hey yall'});
 };

@@ -1,7 +1,6 @@
-const modules = require('../index');
-const Football = modules.Football;
+const { Football, Op } = require('../../database');
 
-exports.getAll = (req, res, next) => {
+exports.getAll = function (req, res) {
     Football.findAll()
         .then(football => {
             res.status(200).json(football);
@@ -11,7 +10,7 @@ exports.getAll = (req, res, next) => {
         });
 };
 
-exports.getByDate = (req, res, next) => {
+exports.getByDate = function (req, res) {
     const { from, to } = req.query;
 
     Football.findAll({
@@ -38,7 +37,7 @@ exports.getByDate = (req, res, next) => {
         });
 };
 
-exports.create = (req, res, next) => {
+exports.create = function (req, res) {
     if (req.body.name && Number(req.body.number_of_people) && Number(req.body.unit_charge)) {
         req.body.amount = Number(req.body.number_of_people) * Number(req.body.unit_charge);
 
@@ -61,7 +60,7 @@ exports.create = (req, res, next) => {
     }
 };
 
-exports.get = (req, res, next) => {
+exports.get = function (req, res) {
     Football.findById(req.params.id)
         .then(football => {
             if (!football) {
@@ -79,7 +78,7 @@ exports.get = (req, res, next) => {
         });
 };
 
-exports.update = (req, res, next) => {
+exports.update = function (req, res) {
     Football.findById(req.params.id)
         .then(football => {
             if (!football) {
@@ -108,7 +107,7 @@ exports.update = (req, res, next) => {
         });
 };
 
-exports.delete = (req, res, next) => {
+exports.delete = function (req, res) {
     Football.destroy({ where: { id: req.params.id } })
         .then(football => {
             if (!football) {

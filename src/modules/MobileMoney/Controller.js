@@ -1,7 +1,6 @@
-const modules = require('../index');
-const MobileMoney = modules.MobileMoney;
+const { MobileMoney, Op } = require('../../database');
 
-exports.getAll = (req, res, next) => {
+exports.getAll = function (req, res) {
     MobileMoney.findAll()
         .then(mobileMoney => {
             res.status(200).json(mobileMoney);
@@ -11,7 +10,7 @@ exports.getAll = (req, res, next) => {
         });
 };
 
-exports.getByDate = (req, res, next) => {
+exports.getByDate = function (req, res) {
     const { from, to } = req.query;
 
     MobileMoney.findAll({
@@ -38,7 +37,7 @@ exports.getByDate = (req, res, next) => {
         });
 }
 
-exports.create = (req, res, next) => {
+exports.create = function (req, res) {
     const { name, type, phone, commission, amount } = req.body;
 
     if (name && type && phone && commission && amount) {
@@ -61,7 +60,7 @@ exports.create = (req, res, next) => {
     }
 };
 
-exports.get = (req, res, next) => {
+exports.get = function (req, res) {
     MobileMoney.findById(req.params.id)
         .then(mobileMoney => {
             if (!mobileMoney) {
@@ -79,7 +78,7 @@ exports.get = (req, res, next) => {
         });
 };
 
-exports.update = (req, res, next) => {
+exports.update = function (req, res) {
     MobileMoney.findById(req.params.id)
         .then(mobileMoney => {
             if (!mobileMoney) {
@@ -103,7 +102,7 @@ exports.update = (req, res, next) => {
         });
 };
 
-exports.delete = (req, res, next) => {
+exports.delete = function (req, res) {
    MobileMoney.destroy({ where: { id: req.params.id } })
         .then(mobileMoney => {
             if (!mobileMoney) {
@@ -124,6 +123,3 @@ exports.delete = (req, res, next) => {
             res.status(500).json(error);
         });
 };
-
-
-

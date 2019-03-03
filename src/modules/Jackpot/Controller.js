@@ -1,7 +1,6 @@
-const modules = require('../index');
-const Jackpot = modules.Jackpot;
+const { Jackpot, Op } = require('../../database');
 
-exports.getAll = (req, res, next) => {
+exports.getAll = function (req, res) {
     Jackpot.findAll()
         .then(jackpot => {
             res.status(200).json(jackpot);
@@ -11,7 +10,7 @@ exports.getAll = (req, res, next) => {
         });
 };
 
-exports.getByDate = (req, res, next) => {
+exports.getByDate = function (req, res) {
     const { from, to } = req.query;
 
     Jackpot.findAll({
@@ -38,7 +37,7 @@ exports.getByDate = (req, res, next) => {
         });
 };
 
-exports.create = (req, res, next) => {
+exports.create = function (req, res) {
     if (req.body.amount) {
         Jackpot.create(req.body)
             .then(jackpot => {
@@ -59,7 +58,7 @@ exports.create = (req, res, next) => {
     }
 };
 
-exports.get = (req, res, next) => {
+exports.get = function (req, res) {
     Jackpot.findById(req.params.id)
         .then(jackpot => {
             if (!jackpot) {
@@ -77,7 +76,7 @@ exports.get = (req, res, next) => {
         });
 };
 
-exports.update = (req, res, next) => {
+exports.update = function (req, res) {
     Jackpot.findById(req.params.id)
         .then(jackpot => {
             if (!jackpot) {
@@ -98,7 +97,7 @@ exports.update = (req, res, next) => {
         });
 };
 
-exports.delete = (req, res, next) => {
+exports.delete = function (req, res) {
     Jackpot.destroy({ where: { id: req.params.id } })
         .then(jackpot => {
             if (!jackpot) {

@@ -3,7 +3,7 @@ const RoleController = require('./Controller');
 
 router.get('/', RoleController.getAll);
 router.post('/', RoleController.create);
-router.get('/:id', RoleController.get);
+router.get('/:id', RoleController.show);
 router.put('/:id', RoleController.update);
 router.delete('/:id', RoleController.delete);
 

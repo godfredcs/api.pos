@@ -1,8 +1,7 @@
-const modules = require('../index');
-const CreditTransfer = modules.CreditTransfer;
+const { CreditTransfer, Op } = require('../../database');
 
 // Function for getting all credit transfers in the system.
-exports.getAll = (req, res, next) => {
+exports.getAll = function (req, res) {
     CreditTransfer.findAll()
         .then(creditTransfer => {
             res.status(200).json(creditTransfer);
@@ -13,7 +12,7 @@ exports.getAll = (req, res, next) => {
 };
 
 // Function for getting credit transfers by date.
-exports.getByDate = (req, res, next) => {
+exports.getByDate = function (req, res) {
     const { from, to } = req.query;
 
     CreditTransfer.findAll({
@@ -41,7 +40,7 @@ exports.getByDate = (req, res, next) => {
 };
 
 // Function for creating a new credit transfer in the system.
-exports.create = (req, res, next) => {
+exports.create = function (req, res) {
     if (req.body.number && req.body.amount) {
         CreditTransfer.create(req.body)
             .then(creditTransfer => {
@@ -62,7 +61,7 @@ exports.create = (req, res, next) => {
     }
 };
 
-exports.get = (req, res, next) => {
+exports.get = function (req, res) {
     CreditTransfer.findById(req.params.id)
         .then(creditTransfer => {
             if (!creditTransfer) {
@@ -80,7 +79,7 @@ exports.get = (req, res, next) => {
         });
 };
 
-exports.update = (req, res, next) => {
+exports.update = function (req, res) {
     CreditTransfer.findById(req.params.id)
         .then(creditTransfer => {
             if (!creditTransfer) {
@@ -101,7 +100,7 @@ exports.update = (req, res, next) => {
         });
 };
 
-exports.delete = (req, res, next) => {
+exports.delete = function (req, res) {
     CreditTransfer.destroy({ where: { id: req.params.id } })
         .then(creditTransfer => {
             if (!creditTransfer) {

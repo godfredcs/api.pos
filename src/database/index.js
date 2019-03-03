@@ -86,7 +86,7 @@ sequelize.sync()
     })
     .catch(error => console.error('Could not create tables: ', error));
 
-/** Export the models */
+/** Export the models and Op operator */
 module.exports = {
     Role,
     User,
@@ -96,5 +96,6 @@ module.exports = {
     Football,
     CreditCard,
     MobileMoney,
-    CreditTransfer
+    CreditTransfer,
+    Op: Sequelize.Op
 };

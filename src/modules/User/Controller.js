@@ -149,7 +149,7 @@ exports.showUser = function (req, res) {
 };
 
 // Function for updating a specific user in the system.
-exports.updateUser = (req, res, next) => {
+exports.updateUser = function (req, res) {
     let updates = {};
 
     // populate the updates object with the request.
@@ -220,7 +220,7 @@ exports.updateUser = (req, res, next) => {
 };
 
 // Function for deleting a specific user in the system by id.
-exports.deleteUser = (req, res, next) => {
+exports.deleteUser = function (req, res) {
     User.destroy({ where: { id: req.params.id } })
         .then(user => {
             if (!user) {

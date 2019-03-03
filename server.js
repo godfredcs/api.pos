@@ -8,8 +8,7 @@ const app = express();
 
 require('./src/database');
 
-/** Import modules */
-const modules = require('./src/modules');
+/** Import Routes */
 const {
     RoleRoute,
     UserRoute,
@@ -20,7 +19,7 @@ const {
     MobileMoneyRoute,
     CreditCardRoute,
     CreditTransferRoute
-} = modules;
+} = require('./src/routes');
 
 /** Import checkAuth middleware */
 const { checkAuth } = require('./src/middlewares');

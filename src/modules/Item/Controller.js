@@ -1,9 +1,7 @@
-const modules = require('../index');
-const Item = modules.Item;
-const Sale = modules.Sale;
+const { Item, Sale } = require('../../database');
 
 
-exports.getAll = (req, res, next) => {
+exports.getAll = function (req, res) {
     Item.findAll({ include: [ Sale ] })
         .then(items => {
             res.status(200).json(items);
@@ -13,7 +11,7 @@ exports.getAll = (req, res, next) => {
         });
 };
 
-exports.create = (req, res, next) => {
+exports.create = function (req, res) {
     if (req.body.name && req.body.unit_price && req.body.whole_price) {
         let details = {
             name: req.body.name,
@@ -44,7 +42,7 @@ exports.create = (req, res, next) => {
     }
 };
 
-exports.get = (req, res, next) => {
+exports.get = function (req, res) {
     Item.findById(req.params.id, { include: [ Sale ] })
         .then(item => {
             if (!item) {
@@ -62,7 +60,7 @@ exports.get = (req, res, next) => {
         });
 };
 
-exports.update = (req, res, next) => {
+exports.update = function (req, res) {
     Item.findById(req.params.id, { include: [ Sale ] })
         .then(item => {
             if (!item) {
@@ -98,7 +96,7 @@ exports.update = (req, res, next) => {
         });
 };
 
-exports.delete = (req, res, next) => {
+exports.delete = function (req, res) {
     Item.destroy({ where: { id: req.params.id }})
         .then(item => {
             if (!item) {
@@ -115,7 +113,5 @@ exports.delete = (req, res, next) => {
                 }
             })
         })
-        .catch(error => {
-            res.status(500).json(error);
-        });
+        .catch(error => res.status(500).json(error));
 };

@@ -1,8 +1,7 @@
-const modules = require('../index');
-const CreditCard = modules.CreditCard;
+const { CreditCard, Op } = require('../../database');
 
 /** Function for getting all credit transfers in the system */
-exports.getAll = (req, res, next) => {
+exports.getAll = function (req, res) {
     CreditCard.findAll()
         .then(cards => {
             res.status(200).json(cards);
@@ -13,7 +12,7 @@ exports.getAll = (req, res, next) => {
 };
 
 /** Funciton for getting credit transgers by date */
-exports.getByDate = (req, res, next) => {
+exports.getByDate = function (req, res) {
     const { from, to } = req.query;
 
     CreditCard.findAll({
@@ -41,7 +40,7 @@ exports.getByDate = (req, res, next) => {
 };
 
 /** Function for creating a new credit transfer in the system */
-exports.create = (req, res, next) => {
+exports.create = function (req, res) {
     if (req.body.number && req.body.amount) {
         CreditCard.create(req.body)
             .then(card => {
@@ -62,7 +61,7 @@ exports.create = (req, res, next) => {
     }
 };
 
-exports.get = (req, res, next) => {
+exports.get = function (req, res) {
     CreditCard.findById(req.params.id)
         .then(card => {
             if (!card) {
@@ -80,7 +79,7 @@ exports.get = (req, res, next) => {
         });
 };
 
-exports.update = (req, res, next) => {
+exports.update = function (req, res) {
     CreditCard.findById(req.params.id)
         .then(card => {
             if (!card) {
@@ -101,7 +100,7 @@ exports.update = (req, res, next) => {
         });
 };
 
-exports.delete = (req, res, next) => {
+exports.delete = function (req, res) {
     CreditCard.destroy({ where: { id: req.params.id } })
         .then(card => {
             if (!card) {
@@ -118,7 +117,5 @@ exports.delete = (req, res, next) => {
                 }
             });
         })
-        .catch(error => {
-            res.status(500).json(error);
-        });
+        .catch(error => res.status(500).json(error));
 };
