@@ -67,8 +67,13 @@ exports.createUser = (req, res, next) => {
     }
 };
 
-// Function for logging a user into the system.
-exports.login = (req, res, next) => {
+/**
+ * Function for logging user into the system
+ *
+ * @param req request
+ * @param res response
+ */
+exports.login = function (req, res) {
     User.findOne({ include: [ Role ], where: { email: req.body.email } })
         .then(user => {
             if (!user) {
@@ -101,6 +106,8 @@ exports.login = (req, res, next) => {
 
                         user.dataValues.api_token = token;
 
+                        delete user.dataValues.password;
+
                         return res.status(200).json(user);
                     }
 
@@ -117,17 +124,22 @@ exports.login = (req, res, next) => {
         });
 }
 
-// Function for getting a specific user by id.
-exports.showUser = (req, res, next) => {
+/**
+ * Function for getting a specified user by id.
+ *
+ * @param req request
+ * @param res response
+ */
+exports.showUser = function (req, res) {
     User.findById(req.params.id)
         .then(user => {
             if (!user) {
                 return res.status(404).json({
-                    error: {
-                        message: "User does not exist"
-                    }
+                    error: { message: "User does not exist" }
                 });
             }
+
+            delete user.dataValues.password;
 
             res.status(200).json(user);
         })

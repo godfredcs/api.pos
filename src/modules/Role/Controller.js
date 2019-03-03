@@ -1,5 +1,4 @@
-const modules = require('../index');
-const Role = modules.Role;
+const { Role } = require('../../database');
 
 exports.getAll = (req, res) => {
     Role.findAll()

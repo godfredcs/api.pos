@@ -47,39 +47,42 @@ sequelize.authenticate()
     .then(() => console.log('Connection has been established successfully.'))
     .catch(error => console.error('Unable to connect to the database: ', error));
 
-sequelize.sync({ force: true })
+sequelize.sync()
     .then(function () {
-        Role.bulkCreate([
-            { name: 'admin' },
-            { name: 'user' }
-        ])
-            .then(function () {
-                Role.findOne({ name: 'admin '})
-                    .then(function (role) {
-                        const role_id = role.get('id');
+        Role.count()
+            .then(function (count) {
+                if (Number(count)) {
+                    return;
+                }
 
-                        let password = ADMIN_PASSWORD;
-                        const salt_rounds = 10;
+                Role.bulkCreate([
+                    { name: 'admin' },
+                    { name: 'user' }
+                ])
+                    .then(function () {
+                        Role.findOne({ name: 'admin '})
+                            .then(function (role) {
+                                const role_id = role.get('id');
+                                const salt_rounds = 10;
 
-                        bcrypt.hash(password, salt_rounds, function (err, hash) {
-                            if (err) {
-                                return console.log('could not hash default password');
-                            }
+                                bcrypt.hash(ADMIN_PASSWORD, salt_rounds, function (err, hash) {
+                                    if (err) {
+                                        return console.log('could not hash default password');
+                                    }
 
-                            if (hash) {
-                                password = hash;
-
-                                User.create({
-                                    role_id,
-                                    firstname: ADMIN_FIRSTNAME,
-                                    lastname: ADMIN_LASTNAME,
-                                    email: ADMIN_EMAIL,
-                                    password
-                                });
-                            }
-                        })
+                                    if (hash) {
+                                        User.create({
+                                            role_id,
+                                            firstname: ADMIN_FIRSTNAME,
+                                            lastname: ADMIN_LASTNAME,
+                                            email: ADMIN_EMAIL,
+                                            password: hash
+                                        });
+                                    }
+                                })
+                            });
                     });
-            });
+            })
     })
     .catch(error => console.error('Could not create tables: ', error));
 
