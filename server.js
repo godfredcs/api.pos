@@ -46,9 +46,9 @@ app.use('/roles', RoleRoute);
 app.use('/users', UserRoute);
 app.use('/items', checkAuth, ItemRoute);
 app.use('/sales', checkAuth, SaleRoute);
-app.use('/jackpot', checkAuth, JackpotRoute);
-app.use('/football', checkAuth, FootballRoute);
-app.use('/mobile_money', checkAuth, MobileMoneyRoute);
+app.use('/jackpots', checkAuth, JackpotRoute);
+app.use('/footballs', checkAuth, FootballRoute);
+app.use('/mobile_moneys', checkAuth, MobileMoneyRoute);
 app.use('/credit_cards', checkAuth, CreditCardRoute);
 app.use('/credit_transfers', checkAuth, CreditTransferRoute);
 
