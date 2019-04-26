@@ -12,11 +12,6 @@ module.exports = function (sequelize, type) {
             allowNull: false
         },
 
-        whole_price: {
-            type: type.STRING,
-            allowNull: false
-        },
-
         unit_price: {
             type: type.STRING,
             allowNull: false
