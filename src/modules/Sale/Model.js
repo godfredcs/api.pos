@@ -7,12 +7,7 @@ module.exports = function (sequelize, type) {
             autoIncrement: true
         },
 
-        unit_quantity: {
-            type: type.INTEGER,
-            allowNull: false
-        },
-
-        whole_quantity: {
+        quantity: {
             type: type.INTEGER,
             allowNull: false
         },
