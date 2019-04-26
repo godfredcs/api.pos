@@ -68,6 +68,5 @@ app.use((error, req, res, next) => {
     });
 });
 
-const server = http.Server(app);
-
-server.listen(5000, () => console.log('Server is running'));
+http.Server(app)
+    .listen(5000, () => console.log('Server is running'));
