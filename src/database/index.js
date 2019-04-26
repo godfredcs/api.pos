@@ -42,6 +42,7 @@ const CreditTransfer = require('../modules/CreditTansfer/Model')(sequelize, Sequ
 
 User.belongsTo(Role);
 Sale.belongsTo(Item);
+Item.hasMany(Sale);
 
 sequelize.authenticate()
     .then(() => console.log('Connection has been established successfully.'))
