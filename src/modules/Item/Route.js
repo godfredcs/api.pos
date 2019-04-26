@@ -1,11 +1,11 @@
 const router = require('express').Router();
 const upload = require('../../services/upload');
-const ItemController = require('./Controller');
+const Item = require('./Controller');
 
-router.get('/', ItemController.getAll);
-router.post('/', upload.single('image'), ItemController.create);
-router.get('/:id', ItemController.get);
-router.put('/:id', upload.single('image'), ItemController.update);
-router.delete('/:id', ItemController.delete);
+router.get('/', Item.all);
+router.post('/', upload.single('image'), Item.create);
+router.get('/:id', Item.show);
+router.put('/:id', upload.single('image'), Item.update);
+router.delete('/:id', Item.delete);
 
 module.exports = router;
