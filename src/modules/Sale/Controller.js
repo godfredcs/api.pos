@@ -26,11 +26,15 @@ exports.getByDate = function (req, res) {
         .catch(error => {
             res.status(500).json(error);
         });
-        return res.status(200).json({hello: 'hey yall'});
 };
 
 exports.getAll = function (req,res) {
-    Sale.findAll({ include: [ Item ]})
+    Sale.findAll({
+        include: [ Item ],
+        order: [
+            ['created_at', 'DESC']
+        ],
+    })
         .then(sales => {
             if (!sales) {
                 return res.status(404).json({
@@ -45,62 +49,51 @@ exports.getAll = function (req,res) {
         .catch(error => {
             res.status(500).json(error);
         });
-        return res.status(200).json({hello: 'hey yall'});
 };
 
 exports.create = function (req, res) {
-    if (req.body.item_id && (req.body.unit_quantity || req.body.whole_quantity)) {
-        if (!Number(req.body.item_id) || (!Number(req.body.unit_quantity) && !Number(req.body.whole_quantity))) {
-            return res.status(401).json({
-                error: {
-                    message: "Please provide the correct entries"
-                }
-            });
-        }
-
-        Item.findById(req.body.item_id)
-            .then(item => {
-                let unit_amount = Number(req.body.unit_quantity) * Number(item.unit_price);
-                let whole_amount = Number(req.body.whole_quantity) * Number(item.whole_price);
-
-                req.body.amount = unit_amount + whole_amount;
-
-                Sale.create(req.body)
-                    .then(sale => {
-                        Sale.findById(sale.id, { include: [ Item ] })
-                            .then(foundSale => {
-                                res.status(201).json(foundSale);
-                            })
-                    })
-                })
-                .catch(error => {
-                    res.status(500).json(error);
-                });
-
-    } else {
-        res.status(401).json({
+    if (!Number(req.body.item_id) || !Number(req.body.quantity)) {
+        return res.status(401).json({
             error: {
-                message: "Item id and quantity are required"
+                message: "Item id and quantity are required and should be integers"
             }
         });
     }
-    return res.status(200).json({hello: 'hey yall'});
+
+    Item.findById(req.body.item_id)
+        .then(item => {
+            if (!item) {
+                return res.status(404).json({ error: 'Item not found' });
+            }
+
+            if (Number(item.quantity) < Number(req.body.quantity)) {
+                return res.status(412).json({ error: 'Quantity should not be more than the quantity available' });
+            }
+
+            item.updateAttributes({ quantity: Number(item.quantity) - Number(req.body.quantity) })
+                .then(updatedItem => {
+                    req.body.amount = Number(req.body.quantity) * Number(item.unit_price);
+
+                    Sale.create(req.body)
+                        .then(sale => {
+                            Sale.findById(sale.id, { include: [ Item ] })
+                                .then(foundSale => res.status(201).json(foundSale))
+                        })
+                    })
+        })
+        .catch(error => res.status(500).json(error));
 };
 
 exports.get = function (req, res) {
     Sale.findById(req.params.id, { include: [ Item ]})
         .then(sale => {
             if (!sale) {
-                return res.status(404).json({
-                    error: { message: "Sale not found" }
-                });
+                return res.status(404).json({ error: "Sale not found" });
             }
 
             res.status(200).json(sale);
         })
         .catch(error => res.status(500).json(error));
-
-    return res.status(200).json({hello: 'hey yall'});
 };
 
 exports.update = function (req, res) {
@@ -136,8 +129,6 @@ exports.update = function (req, res) {
         .catch(error => {
             res.status(500).json(error);
         });
-
-    return res.status(200).json({hello: 'this is the update method for sales'});
 };
 
 exports.delete = function (req, res) {
@@ -154,6 +145,4 @@ exports.delete = function (req, res) {
             })
         })
         .catch(error => res.status(500).json(error));
-
-    return res.status(200).json({hello: 'hey yall'});
 };
