@@ -1,7 +1,6 @@
 const { Item, Sale } = require('../../database');
 
-
-exports.getAll = function (req, res) {
+exports.all = function (req, res) {
     Item.findAll({ include: [ Sale ] })
         .then(items => {
             res.status(200).json(items);
@@ -12,37 +11,31 @@ exports.getAll = function (req, res) {
 };
 
 exports.create = function (req, res) {
-    if (req.body.name && req.body.unit_price && req.body.whole_price) {
-        let details = {
-            name: req.body.name,
-            unit_price: req.body.unit_price,
-            whole_price: req.body.whole_price,
-        };
-
-        if (req.file) {
-            details[req.file.fieldname] = req.file.path;
-        }
-
-        Item.create(details)
-            .then(item => {
-                Item.findById(item.id, { include: [ Sale ] })
-                    .then(foundItem => {
-                        res.status(201).json(foundItem);
-                    })
-            })
-            .catch(error => {
-                res.status(500).json(error);
-            });
-    } else {
-        res.status(401).json({
-            error: {
-                message: "name and unit price are required"
-            }
-        });
+    if (!req.body.name || !req.body.quantity || !req.body.unit_price) {
+        return res.status(401).json({ error: "Item name, quantity and unit price are required" });
     }
+
+    let details = {
+        name: req.body.name,
+        quantity: req.body.quantity,
+        unit_price: req.body.unit_price
+    };
+
+    if (req.file) {
+        details[req.file.fieldname] = req.file.path;
+    }
+
+    Item.create(details)
+        .then(item => {
+            Item.findById(item.id, { include: [ Sale ] })
+                .then(foundItem => {
+                    res.status(201).json(foundItem);
+                })
+        })
+        .catch(error => res.status(500).json(error));
 };
 
-exports.get = function (req, res) {
+exports.show = function (req, res) {
     Item.findById(req.params.id, { include: [ Sale ] })
         .then(item => {
             if (!item) {
