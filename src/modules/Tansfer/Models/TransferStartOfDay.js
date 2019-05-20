@@ -1,19 +1,14 @@
 module.exports = function (sequelize, type) {
-    return sequelize.define('credit_transfer', {
+    return sequelize.define('transfer_start_of_day', {
         id: {
             primaryKey: true,
             type: type.INTEGER,
             autoIncrement: true
         },
 
-        phone: {
-            type: type.STRING,
-            allowNull: false
-        },
-
         amount: {
-            type: type.DECIMAL(10, 2),
-            allowNull: false
+            allowNull: false,
+            type: type.DECIMAL(10, 2)
         }
     }, {
         timestamps: true

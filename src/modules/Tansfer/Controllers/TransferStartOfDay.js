@@ -1,21 +1,21 @@
-const { CreditCard, Op } = require('../../database');
+const { CreditTransfer, Op } = require('../../../database');
 
-/** Function for getting all credit transfers in the system */
+// Function for getting all credit transfers in the system.
 exports.getAll = function (req, res) {
-    CreditCard.findAll()
-        .then(cards => {
-            res.status(200).json(cards);
+    CreditTransfer.findAll()
+        .then(creditTransfer => {
+            res.status(200).json(creditTransfer);
         })
         .catch(error => {
             res.status(500).json(error);
         });
 };
 
-/** Funciton for getting credit transgers by date */
+// Function for getting credit transfers by date.
 exports.getByDate = function (req, res) {
     const { from, to } = req.query;
 
-    CreditCard.findAll({
+    CreditTransfer.findAll({
         where: {
             created_at: {
                 [Op.gte]: from,
@@ -23,8 +23,8 @@ exports.getByDate = function (req, res) {
             }
         }
     })
-        .then(cards => {
-            if (!cards) {
+        .then(credit_transfers => {
+            if (!credit_transfers) {
                 return res.status(404).json({
                     error: {
                         message: "Jackpot not found"
@@ -32,21 +32,21 @@ exports.getByDate = function (req, res) {
                 });
             }
 
-            res.status(200).json(cards);
+            res.status(200).json(credit_transfers);
         })
         .catch(error => {
             res.status(500).json(error);
         });
 };
 
-/** Function for creating a new credit transfer in the system */
+// Function for creating a new credit transfer in the system.
 exports.create = function (req, res) {
     if (req.body.number && req.body.amount) {
-        CreditCard.create(req.body)
-            .then(card => {
-                CreditCard.findById(card.id)
-                    .then(foundCard => {
-                        res.status(201).json(foundCard);
+        CreditTransfer.create(req.body)
+            .then(creditTransfer => {
+                CreditTransfer.findById(creditTransfer.id)
+                    .then(foundCreditTransfer => {
+                        res.status(201).json(foundCreditTransfer);
                     })
             })
             .catch(error => {
@@ -62,9 +62,9 @@ exports.create = function (req, res) {
 };
 
 exports.get = function (req, res) {
-    CreditCard.findById(req.params.id)
-        .then(card => {
-            if (!card) {
+    CreditTransfer.findById(req.params.id)
+        .then(creditTransfer => {
+            if (!creditTransfer) {
                 return res.status(404).json({
                     error: {
                         message: "Credit transfer entry not found"
@@ -72,7 +72,7 @@ exports.get = function (req, res) {
                 });
             }
 
-            res.status(200).json(card);
+            res.status(200).json(creditTransfer);
         })
         .catch(error => {
             res.status(500).json(error);
@@ -80,9 +80,9 @@ exports.get = function (req, res) {
 };
 
 exports.update = function (req, res) {
-    CreditCard.findById(req.params.id)
-        .then(card => {
-            if (!card) {
+    CreditTransfer.findById(req.params.id)
+        .then(creditTransfer => {
+            if (!creditTransfer) {
                 return res.status(404).json({
                     error: {
                         message: "Credit transfer entry not found"
@@ -90,9 +90,9 @@ exports.update = function (req, res) {
                 });
             }
 
-            card.updateAttributes(req.body)
-                .then(updatedCard => {
-                    res.status(200).json(updatedCard);
+            creditTransfer.updateAttributes(req.body)
+                .then(updatedCreditTransfer => {
+                    res.status(200).json(updatedCreditTransfer);
                 })
         })
         .catch(error => {
@@ -101,9 +101,9 @@ exports.update = function (req, res) {
 };
 
 exports.delete = function (req, res) {
-    CreditCard.destroy({ where: { id: req.params.id } })
-        .then(card => {
-            if (!card) {
+    CreditTransfer.destroy({ where: { id: req.params.id } })
+        .then(creditTransfer => {
+            if (!creditTransfer) {
                 return res.status(404).json({
                     error: {
                         message: "Credit transfer entry not found"
@@ -117,5 +117,7 @@ exports.delete = function (req, res) {
                 }
             });
         })
-        .catch(error => res.status(500).json(error));
+        .catch(error => {
+            res.status(500).json(error);
+        });
 };

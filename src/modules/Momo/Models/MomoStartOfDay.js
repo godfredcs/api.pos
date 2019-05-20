@@ -1,27 +1,23 @@
 module.exports = function (sequelize, type) {
-    return sequelize.define('credit_card', {
+    return sequelize.define('momo_start_of_day', {
         id: {
             primaryKey: true,
+            allowNull: false,
             type: type.INTEGER,
             autoIncrement: true
         },
 
-        type: {
-            type: type.ENUM('mtn', 'vodafone', 'airteltigo'),
-            allowNull: false
-        },
-
-        price: {
+        electronic_cash: {
             type: type.DECIMAL(10, 2),
-            allowNull: false
+            allowNull: true
         },
 
-        quantity: {
-            type: type.INTEGER,
-            allowNull: false
+        physical_cash: {
+            type: type.DECIMAL(10, 2),
+            allowNull: true
         },
 
-        amount: {
+        total_cash: {
             type: type.DECIMAL(10, 2),
             allowNull: false
         }

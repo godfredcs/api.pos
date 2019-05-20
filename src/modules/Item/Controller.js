@@ -12,7 +12,9 @@ exports.all = function (req, res) {
 
 exports.create = function (req, res) {
     if (!req.body.name || !req.body.quantity || !req.body.unit_price) {
-        return res.status(401).json({ error: "Item name, quantity and unit price are required" });
+        return res.status(401).json({
+            error: "Item name, quantity and unit price are required"
+        });
     }
 
     let details = {

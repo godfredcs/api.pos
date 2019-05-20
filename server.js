@@ -16,9 +16,16 @@ const {
     SaleRoute,
     JackpotRoute,
     FootballRoute,
-    MobileMoneyRoute,
+
+    MomoEndOfDayRoute,
+    MomoStartOfDayRoute,
+
     CreditCardRoute,
-    CreditTransferRoute
+    CreditCardTypeRoute,
+    CreditCardSaleRoute,
+    CreditCardPurchaseRoute,
+
+    TransferRoute
 } = require('./src/routes');
 
 /** Import checkAuth middleware */
@@ -26,7 +33,7 @@ const { checkAuth } = require('./src/middlewares');
 
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'src', 'public')));
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
@@ -48,9 +55,16 @@ app.use('/items', checkAuth, ItemRoute);
 app.use('/sales', checkAuth, SaleRoute);
 app.use('/jackpots', checkAuth, JackpotRoute);
 app.use('/footballs', checkAuth, FootballRoute);
-app.use('/mobile_moneys', checkAuth, MobileMoneyRoute);
+
 app.use('/credit_cards', checkAuth, CreditCardRoute);
-app.use('/credit_transfers', checkAuth, CreditTransferRoute);
+app.use('/credit_card_types', checkAuth, CreditCardTypeRoute);
+app.use('/credit_card_sales', checkAuth, CreditCardSaleRoute);
+app.use('/credit_card_purchases', checkAuth, CreditCardPurchaseRoute);
+
+app.use('/transfers', checkAuth, TransferRoute);
+
+app.use('/momo_end_of_days', checkAuth, MomoEndOfDayRoute);
+app.use('/momo_start_of_days', checkAuth, MomoStartOfDayRoute);
 
 /** If the route has not been matched up to this point then give 404 error */
 app.use((req, res, next) => {
@@ -68,5 +82,4 @@ app.use((error, req, res, next) => {
     });
 });
 
-http.Server(app)
-    .listen(5000, () => console.log('Server is running'));
+http.Server(app).listen(5000, () => console.log('Server is running'));

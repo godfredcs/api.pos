@@ -1,5 +1,5 @@
 module.exports = function (sequelize, type) {
-    return sequelize.define('mobile_money', {
+    return sequelize.define('momo_end_of_day', {
         id: {
             primaryKey: true,
             allowNull: false,
@@ -7,32 +7,31 @@ module.exports = function (sequelize, type) {
             autoIncrement: true
         },
 
-        name: {
-            type: type.STRING,
-            allowNull: false
+        momo_start_of_day_id: {
+            allowNull: true,
+            type: type.INTEGER
         },
 
-        type: {
-            type: type.ENUM('cash-in', 'cash-out'),
-            allowNull: false
-        },
-
-        phone: {
-            type: type.DECIMAL(10, 2),
-            allowNull: false
-        },
-
-        commission: {
+        electronic_cash: {
             type: type.DECIMAL(10, 2),
             allowNull: true
         },
 
-        amount: {
+        physical_cash: {
+            type: type.DECIMAL(10, 2),
+            allowNull: true
+        },
+
+        total_cash: {
             type: type.DECIMAL(10, 2),
             allowNull: false
-        }
+        },
+
+        profit: {
+            type: type.DECIMAL(10, 2),
+            allowNull: true
+        },
     }, {
         timestamps: true
     });
 }
-

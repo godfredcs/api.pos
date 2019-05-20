@@ -1,0 +1,132 @@
+const { Transfer, Op } = require('../../../database');
+
+/**
+ * Transfer Controller - Get all transfers.
+ */
+exports.getAll = function (req, res) {
+    Transfer.findAll()
+        .then(transfers => res.status(200).json(transfers))
+        .catch(error => res.status(500).json(error));
+};
+
+/**
+ * Transfer Controller - Get transfers by date filter.
+ */
+exports.getByDate = function (req, res) {
+    const { from, to } = req.query;
+
+    CreditTransfer.findAll({
+        where: {
+            created_at: {
+                [Op.gte]: from,
+                [Op.lte]: to
+            }
+        }
+    })
+        .then(credit_transfers => {
+            if (!credit_transfers) {
+                return res.status(404).json({
+                    error: {
+                        message: "Jackpot not found"
+                    }
+                });
+            }
+
+            res.status(200).json(credit_transfers);
+        })
+        .catch(error => {
+            res.status(500).json(error);
+        });
+};
+
+/**
+ * Transfer Controller - Create new transfer.
+ */
+exports.create = function (req, res) {
+    if (req.body.number && req.body.amount) {
+        CreditTransfer.create(req.body)
+            .then(creditTransfer => {
+                CreditTransfer.findById(creditTransfer.id)
+                    .then(foundCreditTransfer => {
+                        res.status(201).json(foundCreditTransfer);
+                    })
+            })
+            .catch(error => {
+                res.status(500).json(error);
+            });
+    } else {
+        res.status(401).json({
+            error: {
+                message: "Please provide all required entries"
+            }
+        });
+    }
+};
+
+/**
+ * Transfer Controller - Get a transfer.
+ */
+exports.get = function (req, res) {
+    CreditTransfer.findById(req.params.id)
+        .then(creditTransfer => {
+            if (!creditTransfer) {
+                return res.status(404).json({
+                    error: {
+                        message: "Credit transfer entry not found"
+                    }
+                });
+            }
+
+            res.status(200).json(creditTransfer);
+        })
+        .catch(error => {
+            res.status(500).json(error);
+        });
+};
+
+/**
+ * Transfer Controller - Update a transfer.
+ */
+exports.update = function (req, res) {
+    CreditTransfer.findById(req.params.id)
+        .then(creditTransfer => {
+            if (!creditTransfer) {
+                return res.status(404).json({
+                    error: {
+                        message: "Credit transfer entry not found"
+                    }
+                });
+            }
+
+            creditTransfer.updateAttributes(req.body)
+                .then(updatedCreditTransfer => {
+                    res.status(200).json(updatedCreditTransfer);
+                })
+        })
+        .catch(error => {
+            res.status(500).json(error);
+        });
+};
+
+/**
+ * Transfer Controller - Delete a transfer.
+ */
+exports.delete = function (req, res) {
+    CreditTransfer.destroy({ where: { id: req.params.id } })
+        .then(creditTransfer => {
+            if (!creditTransfer) {
+                return res.status(404).json({
+                    error: {
+                        message: "Credit transfer entry not found"
+                    }
+                });
+            }
+
+            res.status(200).json({
+                success: {
+                    message: "Credit transfer entry successfully deleted"
+                }
+            });
+        })
+        .catch(error => res.status(500).json(error));
+};

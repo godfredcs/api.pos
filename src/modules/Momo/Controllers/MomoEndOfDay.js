@@ -1,4 +1,4 @@
-const { MobileMoney, Op } = require('../../database');
+const { MobileMoney, Op } = require('../../../database');
 
 exports.getAll = function (req, res) {
     MobileMoney.findAll()
