@@ -25,7 +25,9 @@ const {
     CreditCardSaleRoute,
     CreditCardPurchaseRoute,
 
-    TransferRoute
+    TransferRoute,
+    TransferEndOfDayRoute,
+    TransferStartOfDayRoute
 } = require('./src/routes');
 
 /** Import checkAuth middleware */
@@ -62,6 +64,8 @@ app.use('/credit_card_sales', checkAuth, CreditCardSaleRoute);
 app.use('/credit_card_purchases', checkAuth, CreditCardPurchaseRoute);
 
 app.use('/transfers', checkAuth, TransferRoute);
+app.use('/transfer_end_of_days', checkAuth, TransferEndOfDayRoute);
+app.use('/transfer_start_of_days', checkAuth, TransferStartOfDayRoute);
 
 app.use('/momo_end_of_days', checkAuth, MomoEndOfDayRoute);
 app.use('/momo_start_of_days', checkAuth, MomoStartOfDayRoute);
