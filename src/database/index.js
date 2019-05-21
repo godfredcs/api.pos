@@ -49,16 +49,28 @@ const Transfer = require('../modules/Tansfer/Models/Transfer')(sequelize, Sequel
 const TransferEndOfDay = require('../modules/Tansfer/Models/TransferEndOfDay')(sequelize, Sequelize);
 const TransferStartOfDay = require('../modules/Tansfer/Models/TransferStartOfDay')(sequelize, Sequelize);
 
-
+/**
+ * Set up Relationships on the necessary models.
+ */
 User.belongsTo(Role);
 Sale.belongsTo(Item);
 Item.hasMany(Sale);
+TransferEndOfDay.belongsTo(TransferStartOfDay);
+MomoEndOfDay.belongsTo(MomoStartOfDay);
+CreditCardType.hasMany(CreditCard);
+CreditCardSale.belongsTo(CreditCard);
+CreditCardPurchase.belongsTo(CreditCard);
 
 sequelize.authenticate()
     .then(() => console.log('Connection has been established successfully.'))
     .catch(error => console.error('Unable to connect to the database: ', error));
 
-sequelize.sync()
+/**
+ * true for dropping and recreating tables
+ */
+const force = false;
+
+sequelize.sync({ force })
     .then(function () {
         Role.count()
             .then(function (count) {
@@ -97,7 +109,9 @@ sequelize.sync()
     })
     .catch(error => console.error('Could not create tables: ', error));
 
-/** Export the models and Op operator */
+/**
+ * Export the models and Op operator
+ */
 module.exports = {
     Role,
     User,
