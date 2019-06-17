@@ -2,7 +2,17 @@ const { CreditCard, Op } = require('../../../database');
 
 /** Function for getting all credit transfers in the system */
 exports.getAll = function (req, res) {
-    CreditCard.findAll()
+    let condition = null;
+
+    if (req.query.credit_card_type_id) {
+        condition = {
+            where: {
+                credit_card_type_id: req.query.credit_card_type_id
+            }
+        }
+    }
+
+    CreditCard.findAll(condition)
         .then(cards => {
             res.status(200).json(cards);
         })
@@ -41,24 +51,24 @@ exports.getByDate = function (req, res) {
 
 /** Function for creating a new credit transfer in the system */
 exports.create = function (req, res) {
-    if (req.body.number && req.body.amount) {
-        CreditCard.create(req.body)
-            .then(card => {
-                CreditCard.findById(card.id)
-                    .then(foundCard => {
-                        res.status(201).json(foundCard);
-                    })
-            })
-            .catch(error => {
-                res.status(500).json(error);
-            });
-    } else {
-        res.status(401).json({
+    if (!req.body.name || !req.body.quantity || !req.body.unit_price || !req.body.credit_card_type_id) {
+        return res.status(401).json({
             error: {
                 message: "Please provide all required entries"
             }
         });
     }
+
+    CreditCard.create(req.body)
+        .then(card => {
+            CreditCard.findById(card.id)
+                .then(foundCard => {
+                    res.status(201).json(foundCard);
+                })
+        })
+        .catch(error => {
+            res.status(500).json(error);
+        });
 };
 
 exports.get = function (req, res) {

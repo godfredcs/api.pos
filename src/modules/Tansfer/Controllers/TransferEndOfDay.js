@@ -1,10 +1,10 @@
-const { CreditTransfer, Op } = require('../../../database');
+const { TransferEndOfDay, Op } = require('../../../database');
 
 // Function for getting all credit transfers in the system.
 exports.getAll = function (req, res) {
-    CreditTransfer.findAll()
-        .then(creditTransfer => {
-            res.status(200).json(creditTransfer);
+    TransferEndOfDay.findAll()
+        .then(data => {
+            res.status(200).json(data);
         })
         .catch(error => {
             res.status(500).json(error);
@@ -15,7 +15,7 @@ exports.getAll = function (req, res) {
 exports.getByDate = function (req, res) {
     const { from, to } = req.query;
 
-    CreditTransfer.findAll({
+    TransferEndOfDay.findAll({
         where: {
             created_at: {
                 [Op.gte]: from,
@@ -23,16 +23,16 @@ exports.getByDate = function (req, res) {
             }
         }
     })
-        .then(credit_transfers => {
-            if (!credit_transfers) {
+        .then(data => {
+            if (!data) {
                 return res.status(404).json({
                     error: {
-                        message: "Jackpot not found"
+                        message: "Transfer end of day not found"
                     }
                 });
             }
 
-            res.status(200).json(credit_transfers);
+            return res.status(200).json(data);
         })
         .catch(error => {
             res.status(500).json(error);
@@ -41,81 +41,79 @@ exports.getByDate = function (req, res) {
 
 // Function for creating a new credit transfer in the system.
 exports.create = function (req, res) {
-    if (!req.body.number || !req.body.amount) {
+    if (!req.body.amount) {
         return res.status(401).json({
             error: {
                 message: "Please provide all required entries"
             }
-        })
+        });
     }
 
-    CreditTransfer.create(req.body)
-        .then(creditTransfer => {
-            CreditTransfer.findById(creditTransfer.id)
-                .then(foundCreditTransfer => {
-                    res.status(201).json(foundCreditTransfer);
-                })
+    TransferEndOfDay.create(req.body)
+        .then(transfer_start_of_day => {
+            TransferEndOfDay.findById(transfer_start_of_day.id)
+                .then(data => res.status(201).json(data))
         })
         .catch(error => res.status(500).json(error));
 };
 
 exports.get = function (req, res) {
-    CreditTransfer.findById(req.params.id)
-        .then(creditTransfer => {
-            if (!creditTransfer) {
+    TransferEndOfDay.findById(req.params.id)
+        .then(data => {
+            if (!data) {
                 return res.status(404).json({
                     error: {
-                        message: "Credit transfer entry not found"
+                        message: "Transfer start of day entry not found"
                     }
                 });
             }
 
-            res.status(200).json(creditTransfer);
+            return res.status(200).json(data);
         })
-        .catch(error => res.status(500).json(error));
+        .catch(error => {
+            res.status(500).json(error);
+        });
 };
 
-/**
- * TransferEndOfDay Controller - Update transaction.
- */
 exports.update = function (req, res) {
-    CreditTransfer.findById(req.params.id)
-        .then(creditTransfer => {
-            if (!creditTransfer) {
+    TransferEndOfDay.findById(req.params.id)
+        .then(data => {
+            if (!data) {
                 return res.status(404).json({
                     error: {
-                        message: "Credit transfer entry not found"
+                        message: "Transfer end of day entry not found"
                     }
                 });
             }
 
-            creditTransfer.updateAttributes(req.body)
-                .then(updatedCreditTransfer => {
-                    res.status(200).json(updatedCreditTransfer);
+            TransferEndOfDay.updateAttributes(req.body)
+                .then(updated_data => {
+                    res.status(200).json(updated_data);
                 })
         })
-        .catch(error => res.status(500).json(error));
+        .catch(error => {
+            res.status(500).json(error);
+        });
 };
 
-/**
- * TransferEndOfDay Controller - Delete transaction.
- */
 exports.delete = function (req, res) {
-    CreditTransfer.destroy({ where: { id: req.params.id } })
-        .then(creditTransfer => {
-            if (!creditTransfer) {
+    TransferEndOfDay.destroy({ where: { id: req.params.id } })
+        .then(data => {
+            if (!data) {
                 return res.status(404).json({
                     error: {
-                        message: "Credit transfer entry not found"
+                        message: "Transfer end of day entry not found"
                     }
                 });
             }
 
             res.status(200).json({
                 success: {
-                    message: "Credit transfer entry successfully deleted"
+                    message: "Transfer end of day entry successfully deleted"
                 }
             });
         })
-        .catch(error => res.status(500).json(error));
+        .catch(error => {
+            res.status(500).json(error);
+        });
 };

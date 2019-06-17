@@ -1,7 +1,11 @@
-const { Role } = require('../../database');
+const { Role, User } = require('../../database');
 
 exports.getAll = function (req, res) {
-    Role.findAll()
+    Role.findAll({
+        order: [
+            ['created_at', 'DESC']
+        ]
+    })
         .then(roles => res.status(200).json(roles))
         .catch(error => res.status(500).json(error));
 };

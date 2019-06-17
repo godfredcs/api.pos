@@ -41,24 +41,24 @@ exports.getByDate = function (req, res) {
 
 /** Function for creating a new credit transfer in the system */
 exports.create = function (req, res) {
-    if (req.body.number && req.body.amount) {
-        CreditCardType.create(req.body)
-            .then(card => {
-                CreditCardType.findById(card.id)
-                    .then(foundCard => {
-                        res.status(201).json(foundCard);
-                    })
-            })
-            .catch(error => {
-                res.status(500).json(error);
-            });
-    } else {
-        res.status(401).json({
+     if (!req.body.name) {
+        return res.status(401).json({
             error: {
                 message: "Please provide all required entries"
             }
         });
-    }
+     }
+
+    CreditCardType.create(req.body)
+        .then(card => {
+            CreditCardType.findById(card.id)
+                .then(foundCard => {
+                    res.status(201).json(foundCard);
+                })
+        })
+        .catch(error => {
+            res.status(500).json(error);
+        });
 };
 
 exports.get = function (req, res) {

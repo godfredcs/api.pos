@@ -1,10 +1,10 @@
-const { CreditTransfer, Op } = require('../../../database');
+const { TransferStartOfDay, TransferEndOfDay, Op } = require('../../../database');
 
 // Function for getting all credit transfers in the system.
 exports.getAll = function (req, res) {
-    CreditTransfer.findAll()
-        .then(creditTransfer => {
-            res.status(200).json(creditTransfer);
+    TransferStartOfDay.findAll()
+        .then(transfer_start_of_days => {
+            res.status(200).json(transfer_start_of_days);
         })
         .catch(error => {
             res.status(500).json(error);
@@ -15,7 +15,7 @@ exports.getAll = function (req, res) {
 exports.getByDate = function (req, res) {
     const { from, to } = req.query;
 
-    CreditTransfer.findAll({
+    TransferStartOfDay.findAll({
         where: {
             created_at: {
                 [Op.gte]: from,
@@ -23,16 +23,45 @@ exports.getByDate = function (req, res) {
             }
         }
     })
-        .then(credit_transfers => {
-            if (!credit_transfers) {
+        .then(transfer_start_of_days => {
+            if (!transfer_start_of_days) {
                 return res.status(404).json({
                     error: {
-                        message: "Jackpot not found"
+                        message: "Transfer start of day not found"
                     }
                 });
             }
 
-            res.status(200).json(credit_transfers);
+            res.status(200).json(transfer_start_of_days);
+        })
+        .catch(error => {
+            res.status(500).json(error);
+        });
+};
+
+// Function for getting credit transfers by date.
+exports.getForToday = function (req, res) {
+    const { from, to } = req.query;
+
+    TransferStartOfDay.find({
+        where: {
+            created_at: {
+                [Op.gte]: from,
+                [Op.lte]: to
+            }
+        },
+        // include: [ TransferEndOfDay ]
+    })
+        .then(transfer_start_of_day => {
+            if (!transfer_start_of_day) {
+                return res.status(404).json({
+                    error: {
+                        message: "Transfer start of day not found"
+                    }
+                });
+            }
+
+            res.status(200).json(transfer_start_of_day);
         })
         .catch(error => {
             res.status(500).json(error);
@@ -41,38 +70,34 @@ exports.getByDate = function (req, res) {
 
 // Function for creating a new credit transfer in the system.
 exports.create = function (req, res) {
-    if (req.body.number && req.body.amount) {
-        CreditTransfer.create(req.body)
-            .then(creditTransfer => {
-                CreditTransfer.findById(creditTransfer.id)
-                    .then(foundCreditTransfer => {
-                        res.status(201).json(foundCreditTransfer);
-                    })
-            })
-            .catch(error => {
-                res.status(500).json(error);
-            });
-    } else {
-        res.status(401).json({
+    if (!req.body.amount) {
+        return res.status(401).json({
             error: {
                 message: "Please provide all required entries"
             }
         });
     }
+
+    TransferStartOfDay.create(req.body)
+        .then(transfer_start_of_day => {
+            TransferStartOfDay.findById(transfer_start_of_day.id)
+                .then(data => res.status(201).json(data))
+        })
+        .catch(error => res.status(500).json(error));
 };
 
 exports.get = function (req, res) {
-    CreditTransfer.findById(req.params.id)
-        .then(creditTransfer => {
-            if (!creditTransfer) {
+    TransferStartOfDay.findById(req.params.id)
+        .then(data => {
+            if (!data) {
                 return res.status(404).json({
                     error: {
-                        message: "Credit transfer entry not found"
+                        message: "Transfer start of day entry not found"
                     }
                 });
             }
 
-            res.status(200).json(creditTransfer);
+            return res.status(200).json(data);
         })
         .catch(error => {
             res.status(500).json(error);
@@ -80,19 +105,19 @@ exports.get = function (req, res) {
 };
 
 exports.update = function (req, res) {
-    CreditTransfer.findById(req.params.id)
-        .then(creditTransfer => {
-            if (!creditTransfer) {
+    TransferStartOfDay.findById(req.params.id)
+        .then(data => {
+            if (!data) {
                 return res.status(404).json({
                     error: {
-                        message: "Credit transfer entry not found"
+                        message: "Transfer start of day entry not found"
                     }
                 });
             }
 
-            creditTransfer.updateAttributes(req.body)
-                .then(updatedCreditTransfer => {
-                    res.status(200).json(updatedCreditTransfer);
+            TransferStartOfDay.updateAttributes(req.body)
+                .then(updated_data => {
+                    res.status(200).json(updated_data);
                 })
         })
         .catch(error => {
@@ -101,19 +126,19 @@ exports.update = function (req, res) {
 };
 
 exports.delete = function (req, res) {
-    CreditTransfer.destroy({ where: { id: req.params.id } })
-        .then(creditTransfer => {
-            if (!creditTransfer) {
+    TransferStartOfDay.destroy({ where: { id: req.params.id } })
+        .then(data => {
+            if (!data) {
                 return res.status(404).json({
                     error: {
-                        message: "Credit transfer entry not found"
+                        message: "Transfer start of day entry not found"
                     }
                 });
             }
 
             res.status(200).json({
                 success: {
-                    message: "Credit transfer entry successfully deleted"
+                    message: "Transfer start of day entry successfully deleted"
                 }
             });
         })
