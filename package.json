@@ -6,7 +6,7 @@
   "author": "<addaiz.godfred@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "bcrypt": "^3.0.0",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.18.3",
     "dotenv-safe": "^6.0.0",
     "express": "^4.16.3",
